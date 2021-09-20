@@ -1,0 +1,15 @@
+﻿@page
+@model CryptoExchange.Views.Auth.SignUpModel
+@{
+}
+
+<div>
+    <form asp-controller="Auth" asp-action="SignUp">
+        <input name="email" type="email" placeholder="Email" required />
+        <input name="password" type="password" placeholder="Password" required />
+        <button type="submit">Sign up</button>
+    </form>
+</div>
+<div>
+    <a asp-controller="Auth" asp-action="SignIn">Sign in</a>
+</div>
