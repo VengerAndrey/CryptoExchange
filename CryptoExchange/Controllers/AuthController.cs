@@ -34,6 +34,7 @@ namespace CryptoExchange.Controllers
                                                                              x.Password == Hasher.Hash(user.Password));
             if (existingUser != null)
             {
+                HttpContext.Session.SetInt32("userId", existingUser.Id);
                 return new RedirectResult("/");
             }
 
@@ -60,16 +61,25 @@ namespace CryptoExchange.Controllers
                 {
                     await _context.Users.AddAsync(user);
                     await _context.SaveChangesAsync();
+
+                    existingUser = await _context.Users.FirstOrDefaultAsync(x => x.Email == user.Email);
+
+                    HttpContext.Session.SetInt32("userId", existingUser.Id);
+                    return new RedirectResult("/");
                 }
                 catch (Exception e)
                 {
                     return new RedirectResult("/Error");
                 }
-
-                return new RedirectResult("/");
             }
 
             return new RedirectResult("/Error");
+        }
+
+        public IActionResult LogOut()
+        {
+            HttpContext.Session.Remove("userId");
+            return new RedirectResult("/");
         }
     }
 }

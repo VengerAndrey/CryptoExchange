@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace CryptoExchange.Controllers
 {
@@ -20,6 +21,8 @@ namespace CryptoExchange.Controllers
 
         public IActionResult Index()
         {
+            ViewData["userId"] = HttpContext.Session.GetInt32("userId");
+
             return View();
         }
 
