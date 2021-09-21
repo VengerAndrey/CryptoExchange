@@ -2,3 +2,13 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+
+function applyTemplate(template, item) {
+    for (const field of Object.keys(item)) {
+        const placeholder = `{{${field}}}`;
+        while (template.includes(placeholder)) {
+            template = template.replace(placeholder, item[field]);
+        }
+    }
+    return template;
+}

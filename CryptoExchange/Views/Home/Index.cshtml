@@ -1,19 +1,69 @@
-﻿@if (ViewData["userId"] == null)
-{
-    <div>
-        <a asp-controller="Auth" asp-action="SignIn">Sign in</a>
-    </div>
-    <div>
-        <a asp-controller="Auth" asp-action="SignUp">Sign up</a>
-    </div>
-
+﻿@section Styles {
+    <link rel="stylesheet" href="~/css/home.css" />
 }
-else
+
+@if (ViewData["userId"] != null)
 {
-    <div>
-        You're in!
+    <div class="flex-horizontal">
+        <div class="flex-vertical margin-20">
+            <h2>Your balance</h2>
+            <p id="balance"></p>
+            <h2>Your accounts</h2>
+            <div id="accounts">
+                
+            </div>
+        </div>
+        <div class="flex-vertical margin-20">
+            <h2>Market</h2>
+            <div id="coins">
+                
+            </div>
+        </div>
+        <div class="flex-vertical margin-20">
+            <h2>Trade</h2>
+            <div class="flex-horizontal">
+                <div class="flex-vertical">
+                    <h3>Buy</h3>
+                    <div>
+                        <fieldset id="fieldset-buy">
+                            <label for="select-coin-buy">Coin</label>
+                            <select id="select-coin-buy"></select>
+                            <label for="amount-buy">Amount</label>
+                            <input id="amount-buy" type="number" min="0"/>
+                            <p>Rate</p>
+                            <p id="rate-buy"></p>
+                            <button id="button-buy" disabled>Buy</button>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex-vertical margin-20">
+            <h2>Trade</h2>
+            <div class="flex-horizontal">
+                <div class="flex-vertical">
+                    <h3>Sell</h3>
+                    <div>
+                        <fieldset id="fieldset-sell">
+                            <label for="select-coin-sell">Coin</label>
+                            <select id="select-coin-sell"></select>
+                            <label for="amount-sell">Amount</label>
+                            <input id="amount-sell" type="number" min="0"/>
+                            <p>Rate</p>
+                            <p id="rate-sell"></p>
+                            <button id="button-sell" disabled>Sell</button>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div>
         <a asp-controller="Auth" asp-action="LogOut">Log out</a>
     </div>
+}
+
+@section Scripts
+{
+    <script src="~/js/home.js"></script>
 }

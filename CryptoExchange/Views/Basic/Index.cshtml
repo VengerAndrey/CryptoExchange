@@ -1,0 +1,18 @@
+﻿@if (ViewData["userId"] == null)
+{
+    <div>
+        <a asp-controller="Auth" asp-action="SignIn">Sign in</a>
+    </div>
+    <div>
+        <a asp-controller="Auth" asp-action="SignUp">Sign up</a>
+    </div>
+}
+else
+{
+    <div>
+        You're in!
+    </div>
+    <div>
+        <a asp-controller="Auth" asp-action="LogOut">Log out</a>
+    </div>
+}

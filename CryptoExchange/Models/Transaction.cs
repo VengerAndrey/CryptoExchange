@@ -10,9 +10,9 @@ namespace CryptoExchange.Models
         public int Id { get; set; }
         public int UserId { get; set; }
         public int CoinId { get; set; }
+        // if + => user bought, if - => user sold
         public double Amount { get; set; }
         public double Rate { get; set; }
-        public bool IsBuy { get; set; }
         public long Timestamp { get; set; }
     }
 }

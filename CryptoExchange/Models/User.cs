@@ -14,5 +14,6 @@ namespace CryptoExchange.Models
         [Required]
         public string Password { get; set; }
         public long SignUpTimestamp { get; set; }
+        public double Balance { get; set; }
     }
 }

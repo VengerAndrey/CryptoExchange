@@ -54,7 +54,7 @@ namespace CryptoExchange
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Basic/Error");
             }
             app.UseStaticFiles();
             app.UseCookiePolicy();
@@ -68,7 +68,7 @@ namespace CryptoExchange
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Basic}/{action=Index}/{id?}");
             });
         }
     }

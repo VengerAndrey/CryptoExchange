@@ -29,7 +29,7 @@ namespace CryptoExchange.Data
                 .WithMany()
                 .HasForeignKey(x => x.UserId);
             modelBuilder.Entity<Account>()
-                .HasOne<Coin>()
+                .HasOne(x => x.Coin)
                 .WithMany()
                 .HasForeignKey(x => x.CoinId);
 
