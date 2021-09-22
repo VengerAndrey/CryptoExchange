@@ -33,10 +33,5 @@ namespace CryptoExchange.Controllers
 
             return View();
         }
-
-        public IActionResult Buy(Transaction transaction)
-        {
-            return Ok();
-        }
     }
 }

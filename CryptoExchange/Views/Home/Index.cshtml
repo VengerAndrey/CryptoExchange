@@ -6,53 +6,46 @@
 {
     <div class="flex-horizontal">
         <div class="flex-vertical margin-20">
-            <h2>Your balance</h2>
-            <p id="balance"></p>
-            <h2>Your accounts</h2>
-            <div id="accounts">
-                
+            <div class="round-border">
+                <h2>Your balance</h2>
+                <p id="balance"></p>
             </div>
-        </div>
-        <div class="flex-vertical margin-20">
-            <h2>Market</h2>
-            <div id="coins">
+            <div class="round-border">
+                <h2>Your accounts</h2>
+                <div id="accounts" class="data-table">
                 
-            </div>
-        </div>
-        <div class="flex-vertical margin-20">
-            <h2>Trade</h2>
-            <div class="flex-horizontal">
-                <div class="flex-vertical">
-                    <h3>Buy</h3>
-                    <div>
-                        <fieldset id="fieldset-buy">
-                            <label for="select-coin-buy">Coin</label>
-                            <select id="select-coin-buy"></select>
-                            <label for="amount-buy">Amount</label>
-                            <input id="amount-buy" type="number" min="0"/>
-                            <p>Rate</p>
-                            <p id="rate-buy"></p>
-                            <button id="button-buy" disabled>Buy</button>
-                        </fieldset>
-                    </div>
                 </div>
             </div>
         </div>
-        <div class="flex-vertical margin-20">
-            <h2>Trade</h2>
+        <div class="flex-vertical margin-20 round-border">
+            <h2>Market</h2>
+            <div id="coins" class="data-table">
+                
+            </div>
+        </div>
+        <div class="flex-vertical margin-20 round-border">
+            <h2 class="text-center">Trade</h2>
             <div class="flex-horizontal">
-                <div class="flex-vertical">
-                    <h3>Sell</h3>
+                <div class="flex-vertical round-border">
                     <div>
-                        <fieldset id="fieldset-sell">
-                            <label for="select-coin-sell">Coin</label>
-                            <select id="select-coin-sell"></select>
-                            <label for="amount-sell">Amount</label>
-                            <input id="amount-sell" type="number" min="0"/>
-                            <p>Rate</p>
-                            <p id="rate-sell"></p>
-                            <button id="button-sell" disabled>Sell</button>
-                        </fieldset>
+                        <label for="select-coin-buy">Coin</label>
+                        <select id="select-coin-buy"></select>
+                        <label for="amount-buy">Amount</label>
+                        <input id="amount-buy" type="number" min="0" />
+                        <label for="rate-buy">Rate</label>
+                        <span id="rate-buy"></span>
+                        <button id="button-buy" disabled>Buy</button>
+                    </div>
+                </div>
+                <div class="flex-vertical round-border">
+                    <div>
+                        <label for="select-coin-sell">Coin</label>
+                        <select id="select-coin-sell"></select>
+                        <label for="amount-sell">Amount</label>
+                        <input id="amount-sell" type="number" min="0" />
+                        <label for="rate-sell">Rate</label>
+                        <span id="rate-sell"></span>
+                        <button id="button-sell" disabled>Sell</button>
                     </div>
                 </div>
             </div>

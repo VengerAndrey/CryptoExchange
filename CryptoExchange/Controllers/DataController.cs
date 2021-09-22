@@ -95,6 +95,11 @@ namespace CryptoExchange.Controllers
         [HttpPost]
         public async Task<IActionResult> ProceedTransaction([FromBody]Transaction transaction)
         {
+            if (transaction.Amount == 0)
+            {
+                return BadRequest("Empty transaction.");
+            }
+
             var userId = HttpContext.Session.GetInt32("userId");
 
             if (!userId.HasValue)
@@ -133,11 +138,6 @@ namespace CryptoExchange.Controllers
                     x.UserId == user.Id && x.CoinId == coin.Id);
             }
 
-            if (transaction.Amount == 0)
-            {
-                return Problem("Empty transaction.");
-            }
-
             coin.Amount -= transaction.Amount;
             account.Amount += transaction.Amount;
 
@@ -145,23 +145,30 @@ namespace CryptoExchange.Controllers
 
             if (coin.Amount < 0)
             {
-                return Problem("The requested amount is too large.");
+                return BadRequest("The requested amount is too large.");
             }
 
             if (user.Balance < 0)
             {
-                return Problem("You don't have enough balance to proceed with transaction.");
+                return BadRequest("You don't have enough balance to proceed with transaction.");
             }
 
             if (account.Amount < 0)
             {
-                return Problem("You don't have enough coins.");
+                return BadRequest("You don't have enough coins.");
             }
 
             try
             {
                 _context.Coins.Update(coin);
-                _context.Accounts.Update(account);
+                if (account.Amount > 0)
+                {
+                    _context.Accounts.Update(account);
+                }
+                else
+                {
+                    _context.Accounts.Remove(account);
+                }
                 _context.Users.Update(user);
 
                 transaction.UserId = user.Id;
