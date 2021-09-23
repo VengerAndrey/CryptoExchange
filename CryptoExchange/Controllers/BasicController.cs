@@ -21,9 +21,15 @@ namespace CryptoExchange.Controllers
 
         public IActionResult Index()
         {
-            ViewData["userId"] = HttpContext.Session.GetInt32("userId");
+            var userId = HttpContext.Session.GetInt32("userId");
+            ViewData["userId"] = userId;
 
-            return View();
+            if (userId.HasValue)
+            {
+                return new RedirectResult("/Home");
+            }
+
+            return new RedirectResult("/Auth/SignIn");
         }
 
         public IActionResult Privacy()

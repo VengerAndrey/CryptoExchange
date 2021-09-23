@@ -35,7 +35,7 @@ namespace CryptoExchange.Controllers
             if (existingUser != null)
             {
                 HttpContext.Session.SetInt32("userId", existingUser.Id);
-                return new RedirectResult("/Home");
+                return new RedirectResult("/");
             }
 
             return new RedirectResult("/Error");

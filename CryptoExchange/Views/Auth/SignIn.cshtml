@@ -1,13 +1,15 @@
-﻿@page
-@model CryptoExchange.Views.Auth.SignInModel
-
-<div>
-    <form asp-controller="Auth" asp-action="SignIn">
-        <input name="email" type="email" placeholder="Email" required value="1@gmail.com" />
-        <input name="password" type="password" placeholder="Password" required value="123" />
-        <button type="submit">Sign in</button>
-    </form>
-</div>
-<div>
-    <a asp-controller="Auth" asp-action="SignUp">Sign up</a>
+﻿<div class="absolute-center flex-vertical align-items-center">
+    <div class="round-border flex-vertical align-items-center">
+        <h2 class="margin-10">Sign in</h2>
+        <div>
+            <form asp-controller="Auth" asp-action="SignIn">
+                <input name="email" class="margin-10" type="email" placeholder="Email" required value="1@gmail.com" />
+                <input name="password" class="margin-10" type="password" placeholder="Password" required value="123" />
+                <button class="center-horizontally margin-top">Sign in</button>
+            </form>
+        </div>
+    </div>
+    <div>
+        <a class="link-button margin-top-50 alternative" asp-controller="Auth" asp-action="SignUp">Sign up</a>
+    </div>
 </div>

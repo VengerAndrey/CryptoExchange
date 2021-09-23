@@ -1,10 +1,12 @@
 ﻿@if (ViewData["userId"] == null)
 {
-    <div>
-        <a asp-controller="Auth" asp-action="SignIn">Sign in</a>
-    </div>
-    <div>
-        <a asp-controller="Auth" asp-action="SignUp">Sign up</a>
+    <div class="absolute-center flex-vertical align-items-center">
+        <div class="margin-10">
+            <a asp-controller="Auth" asp-action="SignIn" class="link-button">Sign in</a>
+        </div>
+        <div class="margin-10">
+            <a asp-controller="Auth" asp-action="SignUp" class="link-button">Sign up</a>
+        </div>
     </div>
 }
 else
