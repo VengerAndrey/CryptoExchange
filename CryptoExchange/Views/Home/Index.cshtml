@@ -4,56 +4,102 @@
 
 @if (ViewData["userId"] != null)
 {
+<div class="absolute-center flex-vertical align-items-center">
     <div class="flex-horizontal align-items-baseline">
         <div class="flex-vertical margin-20">
-            <div class="round-border">
-                <h2>Your balance</h2>
+            <div class="flex-vertical align-items-center round-border">
+                <h2 class="margin-10">Your balance</h2>
                 <p id="balance"></p>
             </div>
-            <div class="round-border">
-                <h2>Your accounts</h2>
+            <div class="flex-vertical align-items-center round-border">
+                <h2 class="margin-10">Your accounts</h2>
                 <div id="accounts" class="data-table">
-                
+
                 </div>
             </div>
         </div>
-        <div class="flex-vertical margin-20 round-border">
-            <h2>Market</h2>
+        <div class="flex-vertical align-items-center margin-20 round-border">
+            <h2 class="margin-10">Market</h2>
             <div id="coins" class="data-table">
-                
+
             </div>
         </div>
-        <div class="flex-vertical margin-20 round-border">
-            <h2 class="text-center">Trade</h2>
+        <div class="flex-vertical align-items-center margin-20 round-border">
+            <h2 class="margin-10">Trade</h2>
             <div class="flex-horizontal">
-                <div class="flex-vertical round-border">
-                    <div>
-                        <label for="select-coin-buy">Coin</label>
-                        <select id="select-coin-buy"></select>
-                        <label for="amount-buy">Amount</label>
-                        <input id="amount-buy" type="number" min="0" />
-                        <label for="rate-buy">Rate</label>
-                        <span id="rate-buy"></span>
-                        <button id="button-buy" disabled>Buy</button>
-                    </div>
+                <div class="round-border">
+                    <table class="form-table">
+                        <tr>
+                            <td>
+                                Coin
+                            </td>
+                            <td>
+                                <select id="select-coin-buy"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Rate
+                            </td>
+                            <td>
+                                <span id="rate-buy" class="width-100"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Amount
+                            </td>
+                            <td>
+                                <input id="amount-buy" class="width-100" type="number" min="0" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <button id="button-buy" class="center-horizontally margin-10 width-100" disabled>Buy</button>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
-                <div class="flex-vertical round-border">
-                    <div>
-                        <label for="select-coin-sell">Coin</label>
-                        <select id="select-coin-sell"></select>
-                        <label for="amount-sell">Amount</label>
-                        <input id="amount-sell" type="number" min="0" />
-                        <label for="rate-sell">Rate</label>
-                        <span id="rate-sell"></span>
-                        <button id="button-sell" disabled>Sell</button>
-                    </div>
+                <div class="round-border">
+                    <table class="form-table">
+                        <tr>
+                            <td>
+                                Coin
+                            </td>
+                            <td>
+                                <select id="select-coin-sell"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Rate
+                            </td>
+                            <td>
+                                <span id="rate-sell" class="width-100"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Amount
+                            </td>
+                            <td>
+                                <input id="amount-sell" class="width-100" type="number" min="0" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <button id="button-sell" class="center-horizontally margin-10 width-100" disabled>Sell</button>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-    <div>
-        <a asp-controller="Auth" asp-action="LogOut">Log out</a>
+    <div class="margin-top-50">
+        <a asp-controller="Auth" asp-action="LogOut" class="link-button">Log out</a>
     </div>
+</div>
 }
 
 @section Scripts

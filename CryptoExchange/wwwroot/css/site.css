@@ -234,6 +234,10 @@ select:disabled:hover, select[aria-disabled=true] {
     margin-top: 50px;
 }
 
+.width-100 {
+    width: 100%;
+}
+
 .alternative {
     opacity: 1;
 }
