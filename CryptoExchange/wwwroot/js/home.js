@@ -228,6 +228,8 @@ async function updateTradeSection(section, submitListener) {
 
 function amountOnInput() {
     this.edited = true;
+    console.log(+this.value)
+    console.log(+this.max)
     if (+this.value > +this.max) {
         this.value = this.max;
     }

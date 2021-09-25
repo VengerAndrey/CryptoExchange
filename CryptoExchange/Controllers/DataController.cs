@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CryptoExchange.Data;
@@ -26,7 +25,7 @@ namespace CryptoExchange.Controllers
         [Route("coins-buy")]
         public async Task<IActionResult> GetStockCoins()
         {
-            var coins = await _context.Coins.ToListAsync();
+            var coins = await _context.Coins.OrderBy(x => x.Rank).ToListAsync();
 
             return new JsonResult(coins);
         }
@@ -50,7 +49,7 @@ namespace CryptoExchange.Controllers
                 account.Coin.Amount = account.Amount;
             }
 
-            var coins = accounts.Select(x => x.Coin).ToList();
+            var coins = accounts.Select(x => x.Coin).OrderBy(x => x.Rank).ToList();
 
             return new JsonResult(coins);
         }
@@ -141,7 +140,7 @@ namespace CryptoExchange.Controllers
             coin.Amount -= transaction.Amount;
             account.Amount += transaction.Amount;
 
-            user.Balance -= transaction.Amount * (transaction.Amount > 0 ? coin.BuyRate : coin.SellRate);
+            user.Balance -= Math.Round(transaction.Amount * (transaction.Amount > 0 ? coin.BuyRate : coin.SellRate), 2);
 
             if (coin.Amount < 0)
             {

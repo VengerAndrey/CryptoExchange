@@ -27,20 +27,24 @@ namespace CryptoExchange.Data
             modelBuilder.Entity<Account>()
                 .HasOne<User>()
                 .WithMany()
-                .HasForeignKey(x => x.UserId);
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Account>()
                 .HasOne(x => x.Coin)
                 .WithMany()
-                .HasForeignKey(x => x.CoinId);
+                .HasForeignKey(x => x.CoinId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Transaction>()
                 .HasOne<User>()
                 .WithMany()
-                .HasForeignKey(x => x.UserId);
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Transaction>()
                 .HasOne<Coin>()
                 .WithMany()
-                .HasForeignKey(x => x.CoinId);
+                .HasForeignKey(x => x.CoinId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
         }

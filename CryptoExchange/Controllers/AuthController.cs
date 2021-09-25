@@ -56,6 +56,7 @@ namespace CryptoExchange.Controllers
             {
                 user.SignUpTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 user.Password = Hasher.Hash(user.Password);
+                user.Balance += 100000;
 
                 try
                 {

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CryptoExchange.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210921071718_AddBalance")]
-    partial class AddBalance
+    [Migration("20210924103825_OnDeleteCascade")]
+    partial class OnDeleteCascade
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,8 +25,8 @@ namespace CryptoExchange.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CoinId")
-                        .HasColumnType("int");
+                    b.Property<string>("CoinId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("Amount")
                         .HasColumnType("float");
@@ -40,10 +40,8 @@ namespace CryptoExchange.Migrations
 
             modelBuilder.Entity("CryptoExchange.Models.Coin", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("Amount")
                         .HasColumnType("float");
@@ -54,6 +52,9 @@ namespace CryptoExchange.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Rank")
+                        .HasColumnType("int");
 
                     b.Property<double>("SellRate")
                         .HasColumnType("float");
@@ -73,8 +74,8 @@ namespace CryptoExchange.Migrations
                     b.Property<double>("Amount")
                         .HasColumnType("float");
 
-                    b.Property<int>("CoinId")
-                        .HasColumnType("int");
+                    b.Property<string>("CoinId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("Rate")
                         .HasColumnType("float");
@@ -142,8 +143,7 @@ namespace CryptoExchange.Migrations
                     b.HasOne("CryptoExchange.Models.Coin", null)
                         .WithMany()
                         .HasForeignKey("CoinId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("CryptoExchange.Models.User", null)
                         .WithMany()

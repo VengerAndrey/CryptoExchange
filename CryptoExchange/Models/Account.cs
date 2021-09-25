@@ -8,7 +8,7 @@ namespace CryptoExchange.Models
     public class Account
     {
         public int UserId { get; set; }
-        public int CoinId { get; set; }
+        public string CoinId { get; set; }
         public Coin Coin { get; set; }
         public double Amount { get; set; }
     }

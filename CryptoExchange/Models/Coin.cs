@@ -8,11 +8,12 @@ namespace CryptoExchange.Models
 {
     public class Coin
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         [Required]
         public string Name { get; set; }
         public double SellRate { get; set; }
         public double BuyRate { get; set; }
         public double Amount { get; set; }
+        public int Rank { get; set; }
     }
 }

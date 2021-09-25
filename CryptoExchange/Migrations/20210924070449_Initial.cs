@@ -10,8 +10,7 @@ namespace CryptoExchange.Migrations
                 name: "Coins",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SellRate = table.Column<double>(type: "float", nullable: false),
                     BuyRate = table.Column<double>(type: "float", nullable: false),
@@ -30,7 +29,8 @@ namespace CryptoExchange.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SignUpTimestamp = table.Column<long>(type: "bigint", nullable: false)
+                    SignUpTimestamp = table.Column<long>(type: "bigint", nullable: false),
+                    Balance = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -42,7 +42,7 @@ namespace CryptoExchange.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    CoinId = table.Column<int>(type: "int", nullable: false),
+                    CoinId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Amount = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
@@ -69,10 +69,9 @@ namespace CryptoExchange.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    CoinId = table.Column<int>(type: "int", nullable: false),
+                    CoinId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Amount = table.Column<double>(type: "float", nullable: false),
                     Rate = table.Column<double>(type: "float", nullable: false),
-                    IsBuy = table.Column<bool>(type: "bit", nullable: false),
                     Timestamp = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -83,7 +82,7 @@ namespace CryptoExchange.Migrations
                         column: x => x.CoinId,
                         principalTable: "Coins",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Transactions_Users_UserId",
                         column: x => x.UserId,
