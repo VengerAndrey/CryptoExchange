@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using CryptoExchange.Common;
 using CryptoExchange.Models;
@@ -13,6 +12,7 @@ namespace CryptoExchange.Services
 {
     public class NomicsData : ICoinData
     {
+        private readonly ExchangeCoinService _exchangeCoinService;
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
         private readonly int _apiDelay;
@@ -20,8 +20,9 @@ namespace CryptoExchange.Services
         private readonly double _randomDelta;
         private readonly Random _random;
 
-        public NomicsData(IConfiguration configuration)
+        public NomicsData(ExchangeCoinService exchangeCoinService, IConfiguration configuration)
         {
+            _exchangeCoinService = exchangeCoinService;
             _apiKey = configuration["ApiKey"];
             _apiDelay = configuration.GetValue<int>("ApiDelay");
             _rateDelta = configuration.GetValue<double>("RateDelta");
@@ -36,10 +37,9 @@ namespace CryptoExchange.Services
         public async Task<List<Coin>> GetAll()
         {
             await Task.Delay(_apiDelay);
-
             var uri = new Uri(_httpClient.BaseAddress + "currencies/ticker")
                 .AddParameter("key", _apiKey)
-                .AddParameter("ids", "BTC,ETH,HEX,ADA,USDT,BNB,XRP,SOL,DOT,USDC");
+                .AddParameter("ids", _exchangeCoinService.GetExchangeCoinsString());
             var response = await _httpClient.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)

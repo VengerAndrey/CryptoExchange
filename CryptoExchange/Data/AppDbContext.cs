@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CryptoExchange.Models;
+﻿using CryptoExchange.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CryptoExchange.Data
@@ -13,6 +9,7 @@ namespace CryptoExchange.Data
         public DbSet<Coin> Coins { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<ExchangeCoin> ExchangeCoins { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -45,6 +42,9 @@ namespace CryptoExchange.Data
                 .WithMany()
                 .HasForeignKey(x => x.CoinId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ExchangeCoin>()
+                .HasKey(x => x.CoinId);
 
             base.OnModelCreating(modelBuilder);
         }

@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CryptoExchange.Data;
+using CryptoExchange.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,12 +17,14 @@ namespace CryptoExchange.Services
         private readonly ICoinData _coinData;
         private Timer _timer;
         private readonly double _initialPurchase;
+        private readonly int _dataUpdateRate;
 
         public DataUpdater(IServiceScopeFactory scopeFactory, ICoinData coinData, IConfiguration configuration)
         {
             _scopeFactory = scopeFactory;
             _coinData = coinData;
             _initialPurchase = configuration.GetValue<double>("InitialPurchase");
+            _dataUpdateRate = configuration.GetValue<int>("DataUpdateRate");
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -36,12 +40,32 @@ namespace CryptoExchange.Services
 
                 var newCoins = await _coinData.GetAll();
                 var coins = context.Coins.ToList();
+                var values = context.Coins.Select(x => new {Id = x.Id, Amount = x.Amount});
 
-                foreach (var coin in coins)
+                context.Coins.RemoveRange(coins);
+                foreach (var newCoin in newCoins)
+                {
+                    var oldValue = await values.FirstOrDefaultAsync(x => x.Id == newCoin.Id, cancellationToken);
+                    if (oldValue is null)
+                    {
+                        newCoin.Amount = Convert.ToInt32(_initialPurchase / newCoin.BuyRate);
+                    }
+                    else
+                    {
+                        newCoin.Amount = oldValue.Amount;
+                    }
+                    await context.Coins.AddAsync(newCoin, cancellationToken);
+                }
+
+                /*foreach (var coin in coins)
                 {
                     var newCoin = newCoins.FirstOrDefault(x => x.Id == coin.Id);
 
-                    if (newCoin != null)
+                    if (newCoin is null)
+                    {
+                        context.Coins.Remove(coin);
+                    }
+                    else
                     {
                         coin.SellRate = newCoin.SellRate;
                         coin.BuyRate = newCoin.BuyRate;
@@ -50,7 +74,18 @@ namespace CryptoExchange.Services
                     }
                 }
 
-                context.Coins.UpdateRange(coins);
+                foreach (var newCoin in newCoins)
+                {
+                    var coin = coins.FirstOrDefault(x => x.Id == newCoin.Id);
+
+                    if (coin is null)
+                    {
+                        newCoin.Amount = Convert.ToInt32(_initialPurchase / newCoin.BuyRate);
+                        await context.Coins.AddAsync(newCoin, cancellationToken);
+                    }
+                }
+
+                context.Coins.UpdateRange(coins);*/
 
                 try
                 {
@@ -60,7 +95,7 @@ namespace CryptoExchange.Services
                 {
                     // ignored
                 }
-            }, cancellationToken, TimeSpan.Zero, TimeSpan.FromSeconds(3));
+            }, cancellationToken, TimeSpan.Zero, TimeSpan.FromSeconds(_dataUpdateRate));
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

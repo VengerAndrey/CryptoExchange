@@ -44,6 +44,7 @@ namespace CryptoExchange
 
             services.AddSingleton<ICoinData, NomicsData>();
             services.AddHostedService<DataUpdater>();
+            services.AddSingleton<ExchangeCoinService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
