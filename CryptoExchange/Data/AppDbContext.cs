@@ -10,6 +10,7 @@ namespace CryptoExchange.Data
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<ExchangeCoin> ExchangeCoins { get; set; }
+        public DbSet<Setting> Settings { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -45,6 +46,12 @@ namespace CryptoExchange.Data
 
             modelBuilder.Entity<ExchangeCoin>()
                 .HasKey(x => x.CoinId);
+
+            modelBuilder.Entity<Setting>()
+                .HasKey(x => x.Key);
+            modelBuilder.Entity<Setting>()
+                .Property(x => x.Value)
+                .IsRequired();
 
             base.OnModelCreating(modelBuilder);
         }

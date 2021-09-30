@@ -1,14 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CryptoExchange.Common;
 using CryptoExchange.Data;
 using CryptoExchange.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace CryptoExchange.Controllers
 {
@@ -35,6 +32,10 @@ namespace CryptoExchange.Controllers
             if (existingUser != null)
             {
                 HttpContext.Session.SetInt32("userId", existingUser.Id);
+                if (existingUser.IsAdmin)
+                {
+                    HttpContext.Session.SetString("isAdmin", "true");
+                }
                 return new RedirectResult("/");
             }
 
@@ -66,6 +67,10 @@ namespace CryptoExchange.Controllers
                     existingUser = await _context.Users.FirstOrDefaultAsync(x => x.Email == user.Email);
 
                     HttpContext.Session.SetInt32("userId", existingUser.Id);
+                    if (existingUser.IsAdmin)
+                    {
+                        HttpContext.Session.SetString("isAdmin", "true");
+                    }
                     return new RedirectResult("/");
                 }
                 catch (Exception e)
@@ -80,6 +85,7 @@ namespace CryptoExchange.Controllers
         public IActionResult LogOut()
         {
             HttpContext.Session.Remove("userId");
+            HttpContext.Session.Remove("isAdmin");
             return new RedirectResult("/");
         }
     }

@@ -1,0 +1,66 @@
+﻿@section Scripts
+{
+    <script src="~/js/admin.js"></script>
+}
+
+@if (ViewData["isAdmin"] != null && (string)ViewData["isAdmin"] == "true")
+{
+    <div class="absolute-center flex-vertical align-items-center">
+        <h1>Admin panel</h1>
+        <div class="flex-horizontal align-items-baseline">
+            <div class="flex-vertical align-items-center round-border">
+                <h2 class="margin-10">Stock settings</h2>
+                <table class="form-table">
+                    <tr>
+                        <td>
+                            Rate margin
+                        </td>
+                        <td>
+                            <input id="rate-margin" type="number" step="0.01" min="0" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Random margin
+                        </td>
+                        <td>
+                            <input id="random-margin" type="number" step="0.01" min="0" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Initial purchase
+                        </td>
+                        <td>
+                            <input id="initial-purchase" type="number" min="0" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Additional purchase
+                        </td>
+                        <td>
+                            <input id="additional-purchase" type="number" min="0" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Initial grant
+                        </td>
+                        <td>
+                            <input id="initial-grant" type="number" min="0" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button id="button-stock-settings" class="center-horizontally margin-10 width-100">Update</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="margin-top-50">
+            <a asp-controller="Home" asp-action="Index" class="link-button">Home</a>
+        </div>
+    </div>
+}

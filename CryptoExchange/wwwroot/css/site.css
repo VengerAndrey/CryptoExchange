@@ -100,7 +100,7 @@ body {
     text-align: center;
     color: #444;
     line-height: 1.3;
-    padding: .6em 1.4em .5em .8em;
+    padding: .6em 1.5em;
     max-width: 100%;
     box-sizing: border-box;
     margin: 0;
@@ -111,6 +111,7 @@ body {
     -webkit-appearance: none;
     appearance: none;
     background-color: #fff;
+    text-align: center;
 }
 
     .link-button:link {
@@ -195,16 +196,6 @@ button, input, span {
     text-align: center
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-input[type=number] {
-    -moz-appearance: textfield;
-}
-
 select option {
     font-weight: normal;
 }
@@ -236,4 +227,45 @@ select:disabled:hover, select[aria-disabled=true] {
 
 .alternative {
     opacity: 1;
+}
+
+.data-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.data-table td, .data-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    width: 100%;
+}
+
+.data-table tr:nth-child(odd) {
+    background-color: #fafafa;
+}
+
+.data-table tr:hover {
+    background-color: #eee;
+}
+
+.data-table th {
+    font-size: 20px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    font-weight: normal;
+    background-color: #f2f2f2;
+}
+
+.data-table td {
+    font-size: 18px;
+}
+
+.form-table td {
+    padding-left: 12px;
+    padding-top: 8px;
+    padding-right: 12px;
+    padding-bottom: 8px;
+    font-size: 18px;
+    text-align: center;
 }

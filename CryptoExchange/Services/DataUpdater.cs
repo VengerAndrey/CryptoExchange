@@ -3,9 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CryptoExchange.Data;
-using CryptoExchange.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -16,22 +14,18 @@ namespace CryptoExchange.Services
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ICoinData _coinData;
         private Timer _timer;
-        private readonly double _initialPurchase;
-        private readonly int _dataUpdateRate;
+        private readonly SettingService _settingService;
 
-        public DataUpdater(IServiceScopeFactory scopeFactory, ICoinData coinData, IConfiguration configuration)
+        public DataUpdater(IServiceScopeFactory scopeFactory, ICoinData coinData, SettingService settingService)
         {
             _scopeFactory = scopeFactory;
             _coinData = coinData;
-            _initialPurchase = configuration.GetValue<double>("InitialPurchase");
-            _dataUpdateRate = configuration.GetValue<int>("DataUpdateRate");
+            _settingService = settingService;
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
             Init();
-
-            await Task.Delay(1000, cancellationToken);
 
             _timer = new Timer(async o =>
             {
@@ -46,9 +40,9 @@ namespace CryptoExchange.Services
                 foreach (var newCoin in newCoins)
                 {
                     var oldValue = await values.FirstOrDefaultAsync(x => x.Id == newCoin.Id, cancellationToken);
-                    if (oldValue is null)
+                    if (oldValue is null || oldValue.Amount == 0)
                     {
-                        newCoin.Amount = Convert.ToInt32(_initialPurchase / newCoin.BuyRate);
+                        newCoin.Amount = Convert.ToInt32(_settingService.GetDouble("InitialPurchase") / newCoin.BuyRate);
                     }
                     else
                     {
@@ -56,36 +50,6 @@ namespace CryptoExchange.Services
                     }
                     await context.Coins.AddAsync(newCoin, cancellationToken);
                 }
-
-                /*foreach (var coin in coins)
-                {
-                    var newCoin = newCoins.FirstOrDefault(x => x.Id == coin.Id);
-
-                    if (newCoin is null)
-                    {
-                        context.Coins.Remove(coin);
-                    }
-                    else
-                    {
-                        coin.SellRate = newCoin.SellRate;
-                        coin.BuyRate = newCoin.BuyRate;
-                        coin.Rank = newCoin.Rank;
-                        coin.Name = newCoin.Name;
-                    }
-                }
-
-                foreach (var newCoin in newCoins)
-                {
-                    var coin = coins.FirstOrDefault(x => x.Id == newCoin.Id);
-
-                    if (coin is null)
-                    {
-                        newCoin.Amount = Convert.ToInt32(_initialPurchase / newCoin.BuyRate);
-                        await context.Coins.AddAsync(newCoin, cancellationToken);
-                    }
-                }
-
-                context.Coins.UpdateRange(coins);*/
 
                 try
                 {
@@ -95,7 +59,9 @@ namespace CryptoExchange.Services
                 {
                     // ignored
                 }
-            }, cancellationToken, TimeSpan.Zero, TimeSpan.FromSeconds(_dataUpdateRate));
+            }, cancellationToken, TimeSpan.Zero, TimeSpan.FromSeconds(_settingService.GetInt("DataUpdateRate")));
+
+            return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
@@ -118,7 +84,7 @@ namespace CryptoExchange.Services
 
             foreach (var coin in coins)
             {
-                coin.Amount = Convert.ToInt32(_initialPurchase / coin.BuyRate);
+                coin.Amount = Convert.ToInt32(_settingService.GetDouble("InitialPurchase") / coin.BuyRate);
                 await context.Coins.AddAsync(coin);
             }
 

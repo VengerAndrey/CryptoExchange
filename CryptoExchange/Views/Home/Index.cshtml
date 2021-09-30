@@ -1,6 +1,11 @@
 ﻿@section Styles {
     <link rel="stylesheet" href="~/css/home.css" />
 }
+@section Scripts
+{
+    <script src="~/js/home.js"></script>
+}
+
 
 @if (ViewData["userId"] != null)
 {
@@ -97,12 +102,10 @@
         </div>
     </div>
     <div class="margin-top-50">
+        <a asp-controller="Admin" asp-action="Index" class="link-button">Admin panel</a>
+    </div>
+    <div class="margin-top-50">
         <a asp-controller="Auth" asp-action="LogOut" class="link-button">Log out</a>
     </div>
 </div>
-}
-
-@section Scripts
-{
-    <script src="~/js/home.js"></script>
 }
