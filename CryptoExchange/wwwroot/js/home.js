@@ -241,16 +241,27 @@ function buy(coinId, amount) {
         return 'Empty transaction.';
     }
     fetch('api/Data',
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                coinId,
-                amount
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    coinId,
+                    amount
+                })
             })
-        }).then(updateHomePage);
+        .then(response => {
+            if (response.status != 200) {
+                return response.text();
+            }
+        })
+        .then(message => {
+            if (message) {
+                alert(message);
+            }
+        })
+        .then(updateHomePage);
 }
 
 function sell(coinId, amount) {
@@ -258,16 +269,27 @@ function sell(coinId, amount) {
         return 'Empty transaction.';
     }
     fetch('api/Data',
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                coinId,
-                amount: -amount
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    coinId,
+                    amount: -amount
+                })
             })
-        }).then(updateHomePage);
+        .then(response => {
+            if (response.status != 200) {
+                return response.text();
+            }
+        })
+        .then(message => {
+            if (message) {
+                alert(message);
+            }
+        })
+        .then(updateHomePage);
 }
 
 function updateHomePage() {

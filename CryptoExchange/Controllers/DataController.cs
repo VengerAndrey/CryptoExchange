@@ -72,7 +72,7 @@ namespace CryptoExchange.Controllers
                 return Unauthorized();
             }
 
-            return new JsonResult(user.Balance);
+            return new JsonResult(Math.Round(user.Balance, 2));
         }
 
         [HttpGet]
@@ -121,6 +121,19 @@ namespace CryptoExchange.Controllers
                 return Unauthorized();
             }
 
+            coin.Amount -= transaction.Amount;
+            user.Balance -= Math.Round(transaction.Amount * (transaction.Amount > 0 ? coin.BuyRate : coin.SellRate), 2);
+
+            if (coin.Amount < 0)
+            {
+                return BadRequest("The requested amount is too large.");
+            }
+
+            if (user.Balance < 0)
+            {
+                return BadRequest("You don't have enough balance to proceed with transaction.");
+            }
+
             if (account == null)
             {
                 account = new Account
@@ -137,20 +150,7 @@ namespace CryptoExchange.Controllers
                     x.UserId == user.Id && x.CoinId == coin.Id);
             }
 
-            coin.Amount -= transaction.Amount;
             account.Amount += transaction.Amount;
-
-            user.Balance -= Math.Round(transaction.Amount * (transaction.Amount > 0 ? coin.BuyRate : coin.SellRate), 2);
-
-            if (coin.Amount < 0)
-            {
-                return BadRequest("The requested amount is too large.");
-            }
-
-            if (user.Balance < 0)
-            {
-                return BadRequest("You don't have enough balance to proceed with transaction.");
-            }
 
             if (account.Amount < 0)
             {
