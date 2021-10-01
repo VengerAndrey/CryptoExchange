@@ -25,6 +25,13 @@ namespace CryptoExchange.Controllers
         [Route("coins-buy")]
         public async Task<IActionResult> GetStockCoins()
         {
+            var userId = HttpContext.Session.GetInt32("userId");
+
+            if (!userId.HasValue)
+            {
+                return Unauthorized();
+            }
+
             var coins = await _context.Coins.OrderBy(x => x.Rank).ToListAsync();
 
             return new JsonResult(coins);

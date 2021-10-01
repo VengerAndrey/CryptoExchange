@@ -101,9 +101,12 @@
             </div>
         </div>
     </div>
-    <div class="margin-top-50">
-        <a asp-controller="Admin" asp-action="Index" class="link-button">Admin panel</a>
-    </div>
+    @if (ViewData["isAdmin"] != null && (string) ViewData["isAdmin"] == "true")
+    {
+        <div class="margin-top-50">
+            <a asp-controller="Admin" asp-action="Index" class="link-button">Admin panel</a>
+        </div>
+    }
     <div class="margin-top-50">
         <a asp-controller="Auth" asp-action="LogOut" class="link-button">Log out</a>
     </div>

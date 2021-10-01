@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CryptoExchange.Data;
-using Microsoft.EntityFrameworkCore;
+using CryptoExchange.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -25,41 +26,9 @@ namespace CryptoExchange.Services
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            Init();
+            //Update();
 
-            _timer = new Timer(async o =>
-            {
-                using var scope = _scopeFactory.CreateScope();
-                var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-                var newCoins = await _coinData.GetAll();
-                var coins = context.Coins.ToList();
-                var values = context.Coins.Select(x => new {Id = x.Id, Amount = x.Amount});
-
-                context.Coins.RemoveRange(coins);
-                foreach (var newCoin in newCoins)
-                {
-                    var oldValue = await values.FirstOrDefaultAsync(x => x.Id == newCoin.Id, cancellationToken);
-                    if (oldValue is null || oldValue.Amount == 0)
-                    {
-                        newCoin.Amount = Convert.ToInt32(_settingService.GetDouble("InitialPurchase") / newCoin.BuyRate);
-                    }
-                    else
-                    {
-                        newCoin.Amount = oldValue.Amount;
-                    }
-                    await context.Coins.AddAsync(newCoin, cancellationToken);
-                }
-
-                try
-                {
-                    await context.SaveChangesAsync(cancellationToken);
-                }
-                catch (Exception e)
-                {
-                    // ignored
-                }
-            }, cancellationToken, TimeSpan.Zero, TimeSpan.FromSeconds(_settingService.GetInt("DataUpdateRate")));
+            _timer = new Timer(o => Update(), cancellationToken, TimeSpan.Zero, TimeSpan.FromSeconds(_settingService.GetInt("DataUpdateRate")));
 
             return Task.CompletedTask;
         }
@@ -69,23 +38,40 @@ namespace CryptoExchange.Services
             return Task.CompletedTask;
         }
 
-        private async void Init()
+        private async void Update()
         {
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-            if (context.Coins.Any())
-            {
-                context.Coins.RemoveRange(context.Coins);
-                await context.SaveChangesAsync();
-            }
-
-            var coins = await _coinData.GetAll();
+            var newCoins = await _coinData.GetAll();
+            var coins = context.Coins.ToList();
+            var toDelete = new List<Coin>();
 
             foreach (var coin in coins)
             {
-                coin.Amount = Convert.ToInt32(_settingService.GetDouble("InitialPurchase") / coin.BuyRate);
-                await context.Coins.AddAsync(coin);
+                if (newCoins.FirstOrDefault(x => x.Id == coin.Id) is null)
+                {
+                    toDelete.Add(coin);
+                }
+            }
+            context.Coins.RemoveRange(toDelete);
+
+            foreach (var newCoin in newCoins)
+            {
+                var coin = coins.FirstOrDefault(x => !toDelete.Contains(x) && x.Id == newCoin.Id);
+
+                if (coin is null)
+                {
+                    newCoin.Amount = Convert.ToInt32(_settingService.GetDouble("InitialPurchase") / newCoin.BuyRate);
+                    await context.AddAsync(newCoin);
+                }
+                else
+                {
+                    coin.Rank = newCoin.Rank;
+                    coin.BuyRate = newCoin.BuyRate;
+                    coin.SellRate = newCoin.SellRate;
+                    context.Coins.Update(coin);
+                }
             }
 
             try
