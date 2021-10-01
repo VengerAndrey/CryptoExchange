@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using CryptoExchange.Services;
 using Microsoft.AspNetCore.Http;
 
@@ -7,10 +9,14 @@ namespace CryptoExchange.Controllers
     public class AdminController : Controller
     {
         private readonly SettingService _settingService;
+        private readonly ExchangeCoinService _exchangeCoinService;
+        private readonly ICoinData _coinData;
 
-        public AdminController(SettingService settingService)
+        public AdminController(SettingService settingService, ExchangeCoinService exchangeCoinService, ICoinData coinData)
         {
             _settingService = settingService;
+            _exchangeCoinService = exchangeCoinService;
+            _coinData = coinData;
         }
 
         public IActionResult Index()
@@ -89,6 +95,48 @@ namespace CryptoExchange.Controllers
             _settingService.Set("InitialGrant", initialGrant);
 
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Coins()
+        {
+            var coins = await _coinData.GetAll();
+
+            return Json(coins);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AvailableCoins()
+        {
+            var coins = await _coinData.GetAllAvailable();
+
+            return Json(coins);
+        }
+
+        [HttpPost]
+        public IActionResult AddCoin([FromBody] string id)
+        {
+            var added = _exchangeCoinService.AddExchangeCoin(id);
+
+            if (added)
+            {
+                return Ok();
+            }
+
+            return NotFound();
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteCoin([FromBody] string id)
+        {
+            var deleted = _exchangeCoinService.DeleteExchangeCoin(id);
+
+            if (deleted)
+            {
+                return NoContent();
+            }
+
+            return NotFound();
         }
     }
 }

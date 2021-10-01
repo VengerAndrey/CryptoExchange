@@ -9,5 +9,6 @@ namespace CryptoExchange.Services
     public interface ICoinData
     {
         Task<List<Coin>> GetAll();
+        Task<List<Coin>> GetAllAvailable();
     }
 }

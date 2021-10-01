@@ -1,4 +1,7 @@
-﻿@section Scripts
+﻿@section Styles {
+    <link rel="stylesheet" href="~/css/admin.css" />
+}
+@section Scripts
 {
     <script src="~/js/admin.js"></script>
 }
@@ -57,6 +60,50 @@
                         </td>
                     </tr>
                 </table>
+            </div>
+            <div class="flex-vertical align-items-center round-border">
+                <h2 class="margin-10">Stock coins</h2>
+                <table id="coins" class="data-table">
+                </table>
+            </div>
+            <div class="flex-vertical align-items-center round-border">
+                <h2 class="margin-10">Manage coins</h2>
+                <div class="flex-horizontal">
+                    <div class="round-border">
+                        <table class="form-table">
+                            <tr>
+                                <td>
+                                    Coin
+                                </td>
+                                <td>
+                                    <select id="select-coin-add"></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <button id="button-add-coin" class="center-horizontally margin-10 width-100">Add</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="round-border">
+                        <table class="form-table">
+                            <tr>
+                                <td>
+                                    Coin
+                                </td>
+                                <td>
+                                    <select id="select-coin-delete"></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <button id="button-delete-coin" class="center-horizontally margin-10 width-100">Delete</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="margin-top-50">

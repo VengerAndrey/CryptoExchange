@@ -12,3 +12,7 @@ function applyTemplate(template, item) {
     }
     return template;
 }
+
+function emptyPromise(val = null) {
+    return new Promise((resolve) => { resolve(val); });
+}

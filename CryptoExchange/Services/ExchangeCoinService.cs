@@ -16,7 +16,6 @@ namespace CryptoExchange.Services
         public ExchangeCoinService(IServiceScopeFactory scopeFactory,  IConfiguration configuration)
         {
             _scopeFactory = scopeFactory;
-            //_allExchangeCoins = configuration.GetValue<string[]>("CoinIds").Select(x => new ExchangeCoin {CoinId = x}).ToList();
             _allExchangeCoins = configuration
                 .GetSection("CoinIds")
                 .GetChildren()
@@ -33,9 +32,9 @@ namespace CryptoExchange.Services
 
         public List<ExchangeCoin> GetAvailableExchangeCoins()
         {
-            using var scope = _scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            return _allExchangeCoins.Except(context.ExchangeCoins).ToList();
+            var currentCoinIds = GetExchangeCoins().Select(x => x.CoinId);
+            var r = _allExchangeCoins.Where(x => !currentCoinIds.Contains(x.CoinId)).ToList();
+            return r;
         }
 
         public bool AddExchangeCoin(string id)
@@ -77,6 +76,47 @@ namespace CryptoExchange.Services
             result = result.Substring(0, result.Length - 1);
 
             return result;
+        }
+
+        public string GetAvailableExchangeCoinsString()
+        {
+            var coins = GetAvailableExchangeCoins();
+
+            var result = "";
+
+            foreach (var exchangeCoin in coins)
+            {
+                result += exchangeCoin.CoinId + ",";
+            }
+
+            result = result.Substring(0, result.Length - 1);
+
+            return result;
+        }
+
+        public bool DeleteExchangeCoin(string id)
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            var coin = context.ExchangeCoins.FirstOrDefault(x => x.CoinId == id);
+
+            if (coin != null)
+            {
+                context.Remove(coin);
+
+                try
+                {
+                    context.SaveChanges();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
+            }
+
+            return false;
         }
     }
 }

@@ -59,5 +59,35 @@ namespace CryptoExchange.Services
 
             return new List<Coin>();
         }
+
+        public async Task<List<Coin>> GetAllAvailable()
+        {
+            await Task.Delay(_settingService.GetInt("ApiDelay"));
+            var uri = new Uri(_httpClient.BaseAddress + "currencies/ticker")
+                .AddParameter("key", _apiKey)
+                .AddParameter("ids", _exchangeCoinService.GetAvailableExchangeCoinsString());
+            var response = await _httpClient.GetAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var coinTickers = await response.Content.ReadAsAsync<List<CoinTicker>>();
+                var rateMargin = _settingService.GetDouble("RateMargin");
+                var randomMargin = _settingService.GetDouble("RandomMargin");
+
+                var coins = coinTickers.Select(x => new Coin
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    BuyRate = Math.Round(x.Price * (1 + rateMargin + (_random.Next() % 2 == 0 ? randomMargin : -randomMargin)), 2) ,
+                    SellRate = Math.Round(x.Price * (1 - rateMargin + (_random.Next() % 2 == 0 ? randomMargin : -randomMargin)), 2),
+                    Amount = 0,
+                    Rank = x.Rank
+                }).ToList();
+
+                return coins;
+            }
+
+            return new List<Coin>();
+        }
     }
 }
