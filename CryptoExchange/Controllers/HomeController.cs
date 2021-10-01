@@ -29,9 +29,11 @@ namespace CryptoExchange.Controllers
                 var coins = _context.Coins.ToList();
                 ViewData["accounts"] = accounts;
                 ViewData["coins"] = coins;
+
+                return View();
             }
 
-            return View();
+            return Unauthorized();
         }
     }
 }

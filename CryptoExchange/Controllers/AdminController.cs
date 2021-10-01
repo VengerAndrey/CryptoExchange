@@ -24,119 +24,193 @@ namespace CryptoExchange.Controllers
             ViewData["userId"] = HttpContext.Session.GetInt32("userId");
             ViewData["isAdmin"] = HttpContext.Session.GetString("isAdmin");
 
-            return View();
+            if (ViewData["userId"] != null && ViewData["isAdmin"] != null)
+            {
+                return View();
+            }
+
+            return Unauthorized();
         }
 
         [HttpGet]
         public IActionResult RateMargin()
         {
-            return Ok(_settingService.GetDouble("RateMargin"));
+            if (HttpContext.Session.Keys.Contains("isAdmin") && HttpContext.Session.GetString("isAdmin") == "true")
+            {
+                return Ok(_settingService.GetDouble("RateMargin"));
+            }
+
+            return Unauthorized();
         }
 
         [HttpPost]
         public IActionResult RateMargin([FromBody] double rateMargin)
         {
-            _settingService.Set("RateMargin", rateMargin);
+            if (HttpContext.Session.Keys.Contains("isAdmin") && HttpContext.Session.GetString("isAdmin") == "true")
+            {
+                _settingService.Set("RateMargin", rateMargin);
+                return Ok();
+            }
 
-            return Ok();
+            return Unauthorized();
         }
 
         [HttpGet]
         public IActionResult RandomMargin()
         {
-            return Ok(_settingService.GetDouble("RandomMargin"));
+            if (HttpContext.Session.Keys.Contains("isAdmin") && HttpContext.Session.GetString("isAdmin") == "true")
+            {
+                return Ok(_settingService.GetDouble("RandomMargin"));
+            }
+
+            return Unauthorized();
         }
 
         [HttpPost]
         public IActionResult RandomMargin([FromBody] double randomMargin)
         {
-            _settingService.Set("RandomMargin", randomMargin);
+            if (HttpContext.Session.Keys.Contains("isAdmin") && HttpContext.Session.GetString("isAdmin") == "true")
+            {
+                _settingService.Set("RandomMargin", randomMargin);
 
-            return Ok();
+                return Ok();
+            }
+
+            return Unauthorized();
         }
 
         [HttpGet]
         public IActionResult InitialPurchase()
         {
-            return Ok(_settingService.GetDouble("InitialPurchase"));
+            if (HttpContext.Session.Keys.Contains("isAdmin") && HttpContext.Session.GetString("isAdmin") == "true")
+            {
+                return Ok(_settingService.GetDouble("InitialPurchase"));
+            }
+
+            return Unauthorized();
         }
 
         [HttpPost]
         public IActionResult InitialPurchase([FromBody] double initialPurchase)
         {
-            _settingService.Set("InitialPurchase", initialPurchase);
+            if (HttpContext.Session.Keys.Contains("isAdmin") && HttpContext.Session.GetString("isAdmin") == "true")
+            {
+                _settingService.Set("InitialPurchase", initialPurchase);
 
-            return Ok();
+                return Ok();
+            }
+
+            return Unauthorized();
         }
 
         [HttpGet]
         public IActionResult AdditionalPurchase()
         {
-            return Ok(_settingService.GetDouble("AdditionalPurchase"));
+            if (HttpContext.Session.Keys.Contains("isAdmin") && HttpContext.Session.GetString("isAdmin") == "true")
+            {
+                return Ok(_settingService.GetDouble("AdditionalPurchase"));
+            }
+
+            return Unauthorized();
         }
 
         [HttpPost]
         public IActionResult AdditionalPurchase([FromBody] double additionalPurchase)
         {
-            _settingService.Set("AdditionalPurchase", additionalPurchase);
+            if (HttpContext.Session.Keys.Contains("isAdmin") && HttpContext.Session.GetString("isAdmin") == "true")
+            {
+                _settingService.Set("AdditionalPurchase", additionalPurchase);
 
-            return Ok();
+                return Ok();
+            }
+
+            return Unauthorized();
         }
 
         [HttpGet]
         public IActionResult InitialGrant()
         {
-            return Ok(_settingService.GetDouble("InitialGrant"));
+            if (HttpContext.Session.Keys.Contains("isAdmin") && HttpContext.Session.GetString("isAdmin") == "true")
+            {
+                return Ok(_settingService.GetDouble("InitialGrant"));
+            }
+
+            return Unauthorized();
         }
 
         [HttpPost]
         public IActionResult InitialGrant([FromBody] double initialGrant)
         {
-            _settingService.Set("InitialGrant", initialGrant);
+            if (HttpContext.Session.Keys.Contains("isAdmin") && HttpContext.Session.GetString("isAdmin") == "true")
+            {
+                _settingService.Set("InitialGrant", initialGrant);
 
-            return Ok();
+                return Ok();
+            }
+
+            return Unauthorized();
         }
 
         [HttpGet]
         public async Task<IActionResult> Coins()
         {
-            var coins = await _coinData.GetAll();
+            if (HttpContext.Session.Keys.Contains("isAdmin") && HttpContext.Session.GetString("isAdmin") == "true")
+            {
+                var coins = await _coinData.GetAll();
 
-            return Json(coins);
+                return Json(coins);
+            }
+
+            return Unauthorized();
         }
 
         [HttpGet]
         public async Task<IActionResult> AvailableCoins()
         {
-            var coins = await _coinData.GetAllAvailable();
+            if (HttpContext.Session.Keys.Contains("isAdmin") && HttpContext.Session.GetString("isAdmin") == "true")
+            {
+                var coins = await _coinData.GetAllAvailable();
 
-            return Json(coins);
+                return Json(coins);
+            }
+
+            return Unauthorized();
         }
 
         [HttpPost]
         public IActionResult AddCoin([FromBody] string id)
         {
-            var added = _exchangeCoinService.AddExchangeCoin(id);
-
-            if (added)
+            if (HttpContext.Session.Keys.Contains("isAdmin") && HttpContext.Session.GetString("isAdmin") == "true")
             {
-                return Ok();
+                var added = _exchangeCoinService.AddExchangeCoin(id);
+
+                if (added)
+                {
+                    return Ok();
+                }
+
+                return NotFound();
             }
 
-            return NotFound();
+            return Unauthorized();
         }
 
         [HttpDelete]
         public IActionResult DeleteCoin([FromBody] string id)
         {
-            var deleted = _exchangeCoinService.DeleteExchangeCoin(id);
-
-            if (deleted)
+            if (HttpContext.Session.Keys.Contains("isAdmin") && HttpContext.Session.GetString("isAdmin") == "true")
             {
-                return NoContent();
+                var deleted = _exchangeCoinService.DeleteExchangeCoin(id);
+
+                if (deleted)
+                {
+                    return NoContent();
+                }
+
+                return NotFound();
             }
 
-            return NotFound();
+            return Unauthorized();
         }
     }
 }
