@@ -42,6 +42,12 @@ namespace CryptoExchange.Services
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             var newCoins = _coinData.GetAll();
+
+            if (newCoins.Count == 0)
+            {
+                return;
+            }
+
             var coins = context.Coins.ToList();
             var toDelete = new List<Coin>();
 

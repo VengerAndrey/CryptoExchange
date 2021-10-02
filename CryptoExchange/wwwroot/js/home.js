@@ -2,7 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     updateHomePage();
-    setInterval(updateHomePage, 2000);
+    setInterval(updateHomePage, 5000);
 });
 
 async function updateBalance() {
