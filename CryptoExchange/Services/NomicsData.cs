@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using CryptoExchange.Common;
 using CryptoExchange.Models;
@@ -30,17 +31,18 @@ namespace CryptoExchange.Services
             _random = new Random();
         }
 
-        public async Task<List<Coin>> GetAll()
+        public List<Coin> GetAll()
         {
-            await Task.Delay(_settingService.GetInt("ApiDelay"));
+            Thread.Sleep(_settingService.GetInt("ApiDelay"));
+            //await Task.Delay(_settingService.GetInt("ApiDelay"));
             var uri = new Uri(_httpClient.BaseAddress + "currencies/ticker")
                 .AddParameter("key", _apiKey)
                 .AddParameter("ids", _exchangeCoinService.GetExchangeCoinsString());
-            var response = await _httpClient.GetAsync(uri);
+            var response = _httpClient.GetAsync(uri).Result;
 
             if (response.IsSuccessStatusCode)
             {
-                var coinTickers = await response.Content.ReadAsAsync<List<CoinTicker>>();
+                var coinTickers = response.Content.ReadAsAsync<List<CoinTicker>>().Result;
                 var rateMargin = _settingService.GetDouble("RateMargin");
                 var randomMargin = _settingService.GetDouble("RandomMargin");
 
@@ -60,17 +62,18 @@ namespace CryptoExchange.Services
             return new List<Coin>();
         }
 
-        public async Task<List<Coin>> GetAllAvailable()
+        public List<Coin> GetAllAvailable()
         {
-            await Task.Delay(_settingService.GetInt("ApiDelay"));
+            Thread.Sleep(_settingService.GetInt("ApiDelay"));
+            //await Task.Delay(_settingService.GetInt("ApiDelay"));
             var uri = new Uri(_httpClient.BaseAddress + "currencies/ticker")
                 .AddParameter("key", _apiKey)
                 .AddParameter("ids", _exchangeCoinService.GetAvailableExchangeCoinsString());
-            var response = await _httpClient.GetAsync(uri);
+            var response = _httpClient.GetAsync(uri).Result;
 
             if (response.IsSuccessStatusCode)
             {
-                var coinTickers = await response.Content.ReadAsAsync<List<CoinTicker>>();
+                var coinTickers = response.Content.ReadAsAsync<List<CoinTicker>>().Result;
                 var rateMargin = _settingService.GetDouble("RateMargin");
                 var randomMargin = _settingService.GetDouble("RandomMargin");
 

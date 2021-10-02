@@ -17,6 +17,7 @@ namespace CryptoExchange.Controllers
 
         public IActionResult Index()
         {
+            ViewData["isAdmin"] = HttpContext.Session.GetString("isAdmin");
             if (HttpContext.Session.Keys.Contains("userId"))
             {
                 var userId = HttpContext.Session.GetInt32("userId").Value;
@@ -29,7 +30,7 @@ namespace CryptoExchange.Controllers
                 return View();
             }
 
-            return Unauthorized();
+            return new RedirectResult("/Auth/SignIn");
         }
     }
 }

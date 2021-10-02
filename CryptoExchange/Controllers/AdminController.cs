@@ -156,7 +156,7 @@ namespace CryptoExchange.Controllers
         {
             if (HttpContext.Session.Keys.Contains("isAdmin") && HttpContext.Session.GetString("isAdmin") == "true")
             {
-                var coins = await _coinData.GetAll();
+                var coins = _coinData.GetAll();
 
                 return Json(coins);
             }
@@ -169,7 +169,7 @@ namespace CryptoExchange.Controllers
         {
             if (HttpContext.Session.Keys.Contains("isAdmin") && HttpContext.Session.GetString("isAdmin") == "true")
             {
-                var coins = await _coinData.GetAllAvailable();
+                var coins = _coinData.GetAllAvailable();
 
                 return Json(coins);
             }

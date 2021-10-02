@@ -26,8 +26,6 @@ namespace CryptoExchange.Services
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            //Update();
-
             _timer = new Timer(o => Update(), cancellationToken, TimeSpan.Zero, TimeSpan.FromSeconds(_settingService.GetInt("DataUpdateRate")));
 
             return Task.CompletedTask;
@@ -43,7 +41,7 @@ namespace CryptoExchange.Services
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-            var newCoins = await _coinData.GetAll();
+            var newCoins = _coinData.GetAll();
             var coins = context.Coins.ToList();
             var toDelete = new List<Coin>();
 
@@ -62,7 +60,8 @@ namespace CryptoExchange.Services
 
                 if (coin is null)
                 {
-                    newCoin.Amount = Convert.ToInt32(_settingService.GetDouble("InitialPurchase") / newCoin.BuyRate);
+                    newCoin.Amount = _settingService.GetDouble("InitialPurchase") / newCoin.BuyRate;
+                    newCoin.Amount = Math.Round(newCoin.Amount, 2);
                     await context.AddAsync(newCoin);
                 }
                 else

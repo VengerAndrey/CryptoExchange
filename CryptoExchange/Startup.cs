@@ -44,6 +44,7 @@ namespace CryptoExchange
 
             services.AddSingleton<ICoinData, NomicsData>();
             services.AddHostedService<DataUpdater>();
+            services.AddHostedService<StockGrower>();
             services.AddSingleton<ExchangeCoinService>();
             services.AddSingleton<SettingService>();
         }
