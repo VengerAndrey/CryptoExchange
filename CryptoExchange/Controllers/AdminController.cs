@@ -29,7 +29,7 @@ namespace CryptoExchange.Controllers
                 return View();
             }
 
-            return Unauthorized();
+            return new RedirectResult("/Home");
         }
 
         [HttpGet]

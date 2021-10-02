@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using CryptoExchange.Data;
 using Microsoft.AspNetCore.Http;
@@ -31,6 +32,45 @@ namespace CryptoExchange.Controllers
             }
 
             return new RedirectResult("/Auth/SignIn");
+        }
+
+        public IActionResult Refill()
+        {
+            if (HttpContext.Session.Keys.Contains("userId"))
+            {
+                return View();
+            }
+
+            return new RedirectResult("/Auth/SignIn");
+        }
+
+        [HttpPost]
+        public IActionResult Refill([FromBody] double amount)
+        {
+            if (HttpContext.Session.Keys.Contains("userId"))
+            {
+                var user = _context.Users.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("userId"));
+
+                if (user is null)
+                {
+                    return Unauthorized();
+                }
+
+                user.Balance += amount;
+                _context.Users.Update(user);
+
+                try
+                {
+                    _context.SaveChanges();
+                    return Ok($"Balance is successfully refilled for {amount}$.");
+                }
+                catch (Exception e)
+                {
+                    return BadRequest("Can't refill the balance.");
+                }
+            }
+
+            return Unauthorized();
         }
     }
 }
